@@ -76,6 +76,18 @@ Change tapo API admin password
 Connecting to access point
 ```
 
+After the connection request is accepted, the camera's setup Wi-Fi may
+disappear. Reconnect your computer to your home Wi-Fi and find the camera's
+new IP in your router's client list. Open `rtsp://<camera-ip>:554/stream1` in
+VLC, replacing `<camera-ip>` with that address, and log in as `tapoadmin`
+with the camera password supplied to the script.
+
+Errors identify the provisioning stage and, where available, the camera's
+numeric error code or curl exit status. The script stops on failed operations
+within a request batch. If it stops after changing the admin password, it
+reports that fact: do not rerun the default-password onboarding command.
+Diagnostics do not dump response payloads or passwords.
+
 ---
 
 ## Arbitrary Requests (`tCurl.sh`)
@@ -127,9 +139,11 @@ Example:
 ## Tests
 
 Camera-free regression tests use Python 3's standard library and the script
-dependencies above. They cover AP table formatting, selection and cancellation
-with real `fzf` filtering, request sequence/signature handling, and cryptographic
-helpers. Full provisioning still requires testing against a physical camera.
+dependencies above. They cover table formatting, preservation of AP metadata
+with real `fzf` filtering, empty scans, cancellation, request sequence/signature
+handling, login validation, transport and API errors, partial provisioning,
+and the cryptographic helpers. The interactive password prompt and full provisioning still need
+testing with a physical camera.
 
 ```bash
 python3 -m unittest discover -s tests -v
